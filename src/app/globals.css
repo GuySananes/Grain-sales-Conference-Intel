@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #eef2e9;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #17211b;
+  background:
+    linear-gradient(135deg, rgba(23, 33, 27, 0.035) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(225deg, rgba(13, 124, 134, 0.035) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(180deg, #fbfbf7 0%, #eef2e9 58%, #f7f6ee 100%);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(13, 124, 134, 0.35);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(22, 122, 91, 0.22);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(18px);
+}
+
+.dashboard-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
