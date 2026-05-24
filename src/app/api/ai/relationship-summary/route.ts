@@ -16,6 +16,19 @@ Be concise, useful, and sales-practical. Avoid hype.
 
 Contact group:
 ${JSON.stringify(group, null, 2)}`;
+  const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
+  const requestBody = {
+    model,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a sales intelligence assistant for Grain, a company helping PSPs, travel wholesalers, cross-border payment companies, and FX-exposed businesses manage currency risk."
+      },
+      { role: "user", content: prompt }
+    ],
+    response_format: { type: "json_object" }
+  };
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -24,19 +37,7 @@ ${JSON.stringify(group, null, 2)}`;
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a sales intelligence assistant for Grain, a company helping PSPs, travel wholesalers, cross-border payment companies, and FX-exposed businesses manage currency risk."
-          },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.3,
-        response_format: { type: "json_object" }
-      })
+      body: JSON.stringify(model.startsWith("gpt-5") ? requestBody : { ...requestBody, temperature: 0.3 })
     });
 
     const body = await response.json();
