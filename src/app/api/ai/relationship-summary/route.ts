@@ -12,6 +12,7 @@ export async function POST(request: Request) {
 
   const prompt = `You are helping Grain's sales team interpret repeat conference contacts.
 Return strict JSON with keys: relationshipArc, recommendedNudge, followUpEmail, risk.
+Respond only with one JSON object and no markdown.
 Be concise, useful, and sales-practical. Avoid hype.
 
 Contact group:
@@ -29,6 +30,9 @@ ${JSON.stringify(group, null, 2)}`;
     ],
     response_format: { type: "json_object" }
   };
+  const compatibleRequestBody = model.startsWith("gpt-5")
+    ? { model, messages: requestBody.messages }
+    : { ...requestBody, temperature: 0.3 };
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -37,7 +41,7 @@ ${JSON.stringify(group, null, 2)}`;
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(model.startsWith("gpt-5") ? requestBody : { ...requestBody, temperature: 0.3 })
+      body: JSON.stringify(compatibleRequestBody)
     });
 
     const body = await response.json();
@@ -46,8 +50,9 @@ ${JSON.stringify(group, null, 2)}`;
       return NextResponse.json(fallbackRelationshipSummary(group));
     }
 
-    const content = body.choices?.[0]?.message?.content;
-    const parsed = JSON.parse(content) as Omit<RelationshipSummary, "mode">;
+    const content = body.choices?.[0]?.message?.content ?? "";
+    const jsonText = content.match(/\{[\s\S]*\}/)?.[0] ?? content;
+    const parsed = JSON.parse(jsonText) as Omit<RelationshipSummary, "mode">;
 
     return NextResponse.json({ mode: "ai", ...parsed });
   } catch {
