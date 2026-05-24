@@ -17,7 +17,7 @@ Be concise, useful, and sales-practical. Avoid hype.
 
 Contact group:
 ${JSON.stringify(group, null, 2)}`;
-  const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
+  const model = process.env.OPENAI_MODEL ?? "gpt-5-nano";
   const requestBody = {
     model,
     messages: [
